@@ -31,4 +31,8 @@ public class Life_bar {
     public void removelife(){
         this.curr--;
     }
+
+    public int getLives(){
+        return this.curr;
+    }
 }

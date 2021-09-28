@@ -47,12 +47,17 @@ public class Bird {
 
         return boundingBox;
     }
+
     public double getY() {
         return y;
     }
 
     public double getX() {
         return X;
+    }
+
+    public void resetY(){
+        this.y = INITIAL_Y;
     }
 
     public Rectangle getBox() {

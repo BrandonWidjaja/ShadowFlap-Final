@@ -7,15 +7,17 @@ import bagel.util.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PipeSet {
+public class PipeSet {
     private Image PIPE_IMAGE = new Image("res/level/plasticPipe.png");
     private final int PIPE_GAP = 168;
-    private final int PIPE_SPEED = 2;
-    protected int gapStart;
+    private final int DEFAULT_PIPE_SPEED = 2;
+    private double currSpeed = DEFAULT_PIPE_SPEED;
+    private int gapStart;
     private double TOP_PIPE_Y;
     private double BOTTOM_PIPE_Y;
     private final DrawOptions ROTATOR = new DrawOptions().setRotation(Math.PI);
     private double pipeX = Window.getWidth();
+    private boolean passed = false;
 
     public PipeSet(int gapStart) {
         this.gapStart = gapStart;
@@ -30,7 +32,7 @@ public abstract class PipeSet {
 
     public void update() {
         renderPipeSet();
-        pipeX -= PIPE_SPEED;
+        pipeX -= currSpeed;
 
     }
 
@@ -48,5 +50,24 @@ public abstract class PipeSet {
         this.PIPE_IMAGE = image;
     }
 
+    public void pass(){
+        this.passed = true;
+    }
+
+    public boolean isPassed(){
+        return this.passed;
+    }
+
+    public double getCurrSpeed(){
+        return this.currSpeed;
+    }
+
+    public double getDefaultSpeed(){
+        return this.DEFAULT_PIPE_SPEED;
+    }
+
+    public void setSpeed(double speed){
+        this.currSpeed = speed;
+    }
 
 }
