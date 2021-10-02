@@ -2,6 +2,7 @@ import bagel.*;
 import bagel.util.Colour;
 import bagel.util.Point;
 import bagel.util.Rectangle;
+import org.w3c.dom.css.Rect;
 
 import java.nio.channels.Pipe;
 import java.util.Random;
@@ -28,6 +29,7 @@ public class ShadowFlap extends AbstractGame {
     private final Font FONT = new Font("res/font/slkscr.ttf", FONT_SIZE);
     private final int SCORE_MSG_OFFSET = 75;
     private final int SHOOT_MSG_OFFSET = 68;
+    private final Point SCORE_COORDS = new Point(100, 100);
 
     private Bird bird;
     private int score;
@@ -51,7 +53,7 @@ public class ShadowFlap extends AbstractGame {
     private int currTimeScale = 0;
     private final int MAXTIMESCALE = 5;
     private final int MINTIMESCALE = 1;
-    private final int LVL_UP_THRESHOLD = 2;
+    private final int LVL_UP_THRESHOLD = 3;
 
 
     public ShadowFlap() {
@@ -114,7 +116,7 @@ public class ShadowFlap extends AbstractGame {
             bird.resetY();
         }
 
-        if (lives.getLives() < 1){
+        if (lives.getLives() == 0){
             gameOn = false;
             renderGameOverScreen();
         }
@@ -169,6 +171,10 @@ public class ShadowFlap extends AbstractGame {
         FONT.drawString(finalScoreMsg, (Window.getWidth()/2.0-(FONT.getWidth(finalScoreMsg)/2.0)), (Window.getHeight()/2.0-(FONT_SIZE/2.0))+SCORE_MSG_OFFSET);
     }
 
+    public boolean birdFlameCollision(Rectangle birdBox, Rectangle topFlameBox, Rectangle botFlameBox){
+        return birdBox.intersects(topFlameBox) || birdBox.intersects(botFlameBox);
+    }
+
 
     public boolean birdPipeCollision(Rectangle birdBox, Rectangle topPipeBox, Rectangle bottomPipeBox) {
         // check for collision
@@ -183,7 +189,7 @@ public class ShadowFlap extends AbstractGame {
 
     public void renderScore(){
         String scoreMsg = SCORE_MSG + score;
-        FONT.drawString(scoreMsg, 100, 100);
+        FONT.drawString(scoreMsg, SCORE_COORDS.x, SCORE_COORDS.y);
     }
 
     public void updateScore(PipeSet pipe) {
@@ -243,6 +249,17 @@ public class ShadowFlap extends AbstractGame {
             // bird and pipe collision detection
             Rectangle topPipeBox = pipe.getTopBox();
             Rectangle bottomPipeBox = pipe.getBottomBox();
+
+            if (pipe instanceof  SteelPipe){
+                Rectangle topFlameBox = ((SteelPipe) pipe).getTopFlameBox();
+                Rectangle botFlameBox = ((SteelPipe) pipe).getBotFlameBox();
+
+                if (birdFlameCollision(birdBox, topFlameBox, botFlameBox) && ((SteelPipe) pipe).isFlameOn()){
+                    lives.removeLife();
+                    removePipeList.add(pipe);
+                }
+            }
+
             if (birdPipeCollision(birdBox, topPipeBox, bottomPipeBox)){
                 lives.removeLife();
                 removePipeList.add(pipe);

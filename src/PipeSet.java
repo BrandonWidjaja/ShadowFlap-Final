@@ -36,14 +36,16 @@ public class PipeSet {
 
     }
 
+    public double getX(){
+        return this.pipeX;
+    }
+
     public Rectangle getTopBox() {
         return PIPE_IMAGE.getBoundingBoxAt(new Point(pipeX, TOP_PIPE_Y));
-
     }
 
     public Rectangle getBottomBox() {
         return PIPE_IMAGE.getBoundingBoxAt(new Point(pipeX, BOTTOM_PIPE_Y));
-
     }
 
     public void setImage(Image image){
