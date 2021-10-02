@@ -5,34 +5,41 @@ import java.util.ArrayList;
 
 public class Life_bar {
     private final Image full = new Image("res/level/fullLife.png");
-    private final Image no = new Image("res/level/noLife.png");
-    private int curr;
+    private final Image used = new Image("res/level/noLife.png");
+    private final int INITIAL_X = 100;
+    private final int X_GAP = 15;
+    private int currLives;
     private int max;
-    private int x = 100;
+    private int currX;
 
 
     public Life_bar(int max) {
         this.max = max;
-        this.curr = max;
+        this.currLives = max;
     }
 
     public void update(Input input){
-        for (int i=0; i<curr; i++){
-            full.draw(x, 15);
-            x+= 15 + full.getWidth();
+
+        currX = INITIAL_X;
+        // draw full hearts
+        for (int i = 0; i < currLives; i++){
+            full.drawFromTopLeft(currX, X_GAP);
+            currX += X_GAP + full.getWidth();
         }
-        for (int i=0; i<max - curr; i++){
-            no.draw(x, 15);
-            x+= 15 + full.getWidth();
+        // draw used hearts
+        for (int i = 0; i < max - currLives; i++){
+            used.drawFromTopLeft(currX, X_GAP);
+            currX += X_GAP + full.getWidth();
         }
 
-        x = 100;
     }
-    public void removelife(){
-        this.curr--;
+
+    public void removeLife(){
+        this.currLives--;
     }
 
     public int getLives(){
-        return this.curr;
+        return this.currLives;
     }
+
 }

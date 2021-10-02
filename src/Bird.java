@@ -27,7 +27,7 @@ public class Bird {
     }
 
     public Rectangle update(Input input) {
-        frameCount += 1;
+        frameCount ++;
         if (input.wasPressed(Keys.SPACE)) {
             yVelocity = -FLY_SIZE;
             WING_DOWN_IMAGE.draw(X, y);

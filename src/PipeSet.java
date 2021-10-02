@@ -12,10 +12,10 @@ public class PipeSet {
     private final int PIPE_GAP = 168;
     private final int DEFAULT_PIPE_SPEED = 2;
     private double currSpeed = DEFAULT_PIPE_SPEED;
-    private int gapStart;
-    private double TOP_PIPE_Y;
-    private double BOTTOM_PIPE_Y;
     private final DrawOptions ROTATOR = new DrawOptions().setRotation(Math.PI);
+    private int gapStart;
+    private final double TOP_PIPE_Y;
+    private final double BOTTOM_PIPE_Y;
     private double pipeX = Window.getWidth();
     private boolean passed = false;
 

@@ -15,33 +15,43 @@ import java.util.ArrayList;
  * Code adapted from Project-1 Sample Solution
  */
 public class ShadowFlap extends AbstractGame {
-    private final Image BACKGROUND_IMAGE = new Image("res/level-0/background.png");
+    private final Image LVL0_BACKGROUND = new Image("res/level-0/background.png");
+    private final Image LVL1_BACKGROUND = new Image("res/level-1/background.png");
     private final String INSTRUCTION_MSG = "PRESS SPACE TO START";
     private final String GAME_OVER_MSG = "GAME OVER!";
     private final String CONGRATS_MSG = "CONGRATULATIONS!";
     private final String SCORE_MSG = "SCORE: ";
     private final String FINAL_SCORE_MSG = "FINAL SCORE: ";
+    private final String LVLUP_MSG = "LEVEL-UP!";
+    private final String SHOOT_MSG = "PRESS 'S' TO SHOOT";
     private final int FONT_SIZE = 48;
     private final Font FONT = new Font("res/font/slkscr.ttf", FONT_SIZE);
     private final int SCORE_MSG_OFFSET = 75;
+    private final int SHOOT_MSG_OFFSET = 68;
+
     private Bird bird;
     private int score;
     private boolean gameOn;
     private boolean win;
     private Life_bar lives;
-    private ArrayList<PipeSet> pipeArray = new ArrayList<PipeSet>();
+    private final ArrayList<PipeSet> pipeArray = new ArrayList<PipeSet>();
+    private final ArrayList<PipeSet> removePipeList = new ArrayList<>();
     private final int DEFAULT_PIPE_RATE = 250; // Changed to suit devices frame rate
     private double currPipeRate = DEFAULT_PIPE_RATE;
     private int frameCount = 0;
-    private Random rand = new Random();
-    private int level = 0;
+    private final Random rand = new Random();
+    private boolean levelUp = false;
+    private int levelUpDuration = 200; // changed to suit devices framerate
     private int[] LVL_0_GAP_START = new int[]{100, 300, 500};
-    private ArrayList<PipeSet> removePipeList = new ArrayList<>();
+    private int[] LVL_1_GAP_START = new int[]{100, 500};
+    private final int LVL_0_LIVES = 3;
+    private final int LVL_1_LIVES = 6;
+
     private final double TIMERATIO = 1.5;
     private int currTimeScale = 0;
     private final int MAXTIMESCALE = 5;
     private final int MINTIMESCALE = 1;
-    private final int LVL_UP_THRESHOLD = 10;
+    private final int LVL_UP_THRESHOLD = 2;
 
 
     public ShadowFlap() {
@@ -50,7 +60,7 @@ public class ShadowFlap extends AbstractGame {
         score = 0;
         gameOn = false;
         win = false;
-        lives = new Life_bar(3);
+        lives = new Life_bar(LVL_0_LIVES);
     }
 
     /**
@@ -67,15 +77,30 @@ public class ShadowFlap extends AbstractGame {
      */
     @Override
     public void update(Input input) {
-        BACKGROUND_IMAGE.draw(Window.getWidth()/2.0, Window.getHeight()/2.0);
         frameCount++;
+
+        if (!levelUp || frameCount < levelUpDuration){
+            LVL0_BACKGROUND.draw(Window.getWidth()/2.0, Window.getHeight()/2.0);
+        } else {
+            LVL1_BACKGROUND.draw(Window.getWidth()/2.0, Window.getHeight()/2.0);
+        }
+
         if (input.wasPressed(Keys.ESCAPE)) {
             Window.close();
         }
 
         // game has not started
         if (!gameOn && lives.getLives() > 0) {
-            renderInstructionScreen(input);
+            if (!levelUp){
+                renderInstructionScreen(input);
+            } else if (frameCount >= levelUpDuration){
+                renderInstructionScreen(input);
+            }
+        }
+
+        if (levelUp && frameCount < levelUpDuration){
+            renderLvlUp();
+            pipeArray.clear();
         }
 
         // game won
@@ -85,7 +110,7 @@ public class ShadowFlap extends AbstractGame {
 
         // out of bound detection
         if (birdOutOfBound()) {
-            lives.removelife();
+            lives.removeLife();
             bird.resetY();
         }
 
@@ -95,7 +120,7 @@ public class ShadowFlap extends AbstractGame {
         }
 
         // game is active and level 1
-        if (gameOn && !win && !birdOutOfBound() && level == 0) {
+        if (gameOn && !win && !birdOutOfBound()) {
 
             updateTimeScale(input);
 
@@ -106,9 +131,10 @@ public class ShadowFlap extends AbstractGame {
             bird.update(input);
             Rectangle birdBox = bird.getBox();
 
-            birdPipeCollision(birdBox);
+            updatePipes(birdBox);
 
             lives.update(input);
+
             renderScore();
             pipeArray.removeAll(removePipeList);
         }
@@ -123,10 +149,11 @@ public class ShadowFlap extends AbstractGame {
     public void renderInstructionScreen(Input input) {
         // paint the instruction on screen
         FONT.drawString(INSTRUCTION_MSG, (Window.getWidth()/2.0-(FONT.getWidth(INSTRUCTION_MSG)/2.0)), (Window.getHeight()/2.0-(FONT_SIZE/2.0)));
+        if (levelUp){
+            FONT.drawString(SHOOT_MSG, (Window.getWidth()/2.0-(FONT.getWidth(SHOOT_MSG)/2.0)), (Window.getHeight()/2.0-(FONT_SIZE/2.0) + SHOOT_MSG_OFFSET));
+        }
         if (input.wasPressed(Keys.SPACE)) {
             gameOn = true;
-
-
         }
     }
 
@@ -143,11 +170,15 @@ public class ShadowFlap extends AbstractGame {
     }
 
 
-    public boolean detectCollision(Rectangle birdBox, Rectangle topPipeBox, Rectangle bottomPipeBox) {
+    public boolean birdPipeCollision(Rectangle birdBox, Rectangle topPipeBox, Rectangle bottomPipeBox) {
         // check for collision
 
         return birdBox.intersects(topPipeBox) ||
                 birdBox.intersects(bottomPipeBox);
+    }
+
+    public void renderLvlUp(){
+        FONT.drawString(LVLUP_MSG, (Window.getWidth()/2.0-(FONT.getWidth(LVLUP_MSG)/2.0)), (Window.getHeight()/2.0-(FONT_SIZE/2.0)));
     }
 
     public void renderScore(){
@@ -156,34 +187,37 @@ public class ShadowFlap extends AbstractGame {
     }
 
     public void updateScore(PipeSet pipe) {
+        // tag passed pipes
         if (bird.getX() > pipe.getTopBox().right() && !pipe.isPassed()) {
-            score += 1;
+            score ++;
             pipe.pass();
         }
 
-        // detect win
+        // detect level up
         if (score == LVL_UP_THRESHOLD) {
-            win = true;
+            levelUp = true;
+            frameCount = 0;
+            lives = new Life_bar(LVL_1_LIVES);
+            gameOn = false;
+            win = false;
+            score = 0;
+            bird.resetY();
+
         }
     }
 
     public void spawnRandomPipe(){
-        if (level==0){
+        // randomise pipe spawns
+        if (!levelUp){
             pipeArray.add(new PipeSet(LVL_0_GAP_START[rand.nextInt(LVL_0_GAP_START.length)]));
-        }
-    }
-
-    public void birdPipeCollision(Rectangle birdBox){
-
-        for (PipeSet pipe: pipeArray){
-            pipe.update();
-            Rectangle topPipeBox = pipe.getTopBox();
-            Rectangle bottomPipeBox = pipe.getBottomBox();
-            if (detectCollision(birdBox, topPipeBox, bottomPipeBox)){
-                lives.removelife();
-                removePipeList.add(pipe);
+        } else {
+            // generate random type
+            if (rand.nextInt(2) == 0){
+                pipeArray.add(new SteelPipe(rand.nextInt(LVL_1_GAP_START[1] - LVL_1_GAP_START[0]) + LVL_1_GAP_START[0]));
+            } else {
+                pipeArray.add(new PlasticPipe(rand.nextInt(LVL_1_GAP_START[1] - LVL_1_GAP_START[0]) + LVL_1_GAP_START[0]));
             }
-            updateScore(pipe);
+
         }
     }
 
@@ -192,7 +226,7 @@ public class ShadowFlap extends AbstractGame {
             currTimeScale++;
         }
 
-        if (input.wasPressed(Keys.K) && currTimeScale > MINTIMESCALE){
+        if (input.wasPressed(Keys.K) && currTimeScale >= MINTIMESCALE){
             currTimeScale--;
         }
         for (PipeSet pipe: pipeArray){
@@ -201,5 +235,26 @@ public class ShadowFlap extends AbstractGame {
             }
         }
     }
+
+    public void updatePipes(Rectangle birdBox){
+        for (PipeSet pipe: pipeArray){
+            pipe.update();
+
+            // bird and pipe collision detection
+            Rectangle topPipeBox = pipe.getTopBox();
+            Rectangle bottomPipeBox = pipe.getBottomBox();
+            if (birdPipeCollision(birdBox, topPipeBox, bottomPipeBox)){
+                lives.removeLife();
+                removePipeList.add(pipe);
+            }
+
+            // remove pipes which go off screen
+            if (pipe.getTopBox().right() < 0){
+                removePipeList.add(pipe);
+            }
+            updateScore(pipe);
+        }
+    }
+
 
 }
