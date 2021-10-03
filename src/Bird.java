@@ -44,6 +44,15 @@ public class Bird {
             }
         }
         y += yVelocity;
+        if (this.hasWeapon()){
+            if (!this.weapon.isUsed()) {
+
+                this.weapon.pickUp();
+                this.weapon.setxPos(this.getBox().right());
+                this.weapon.setyPos(this.y);
+            }
+        }
+
 
         if (input.wasPressed(Keys.S)){
             this.useWeapon();
@@ -69,12 +78,16 @@ public class Bird {
     }
 
     public void pickupWeapon(Weapon weapon){
-        this.weapon = weapon;
-        if (!this.weapon.isUsed()) {
+        if (!weapon.isUsed()){
+            this.weapon = weapon;
+        }
+    }
 
-            this.weapon.pickUp();
-            this.weapon.setxPos(this.getBox().right());
-            this.weapon.setyPos(this.y);
+    public boolean hasWeapon(){
+        if (weapon == null){
+            return false;
+        } else {
+            return true;
         }
     }
 

@@ -60,8 +60,8 @@ public class ShadowFlap extends AbstractGame {
     private int currTimeScale = 0;
     private final int MAXTIMESCALE = 5;
     private final int MINTIMESCALE = 1;
-    private final int LVL_UP_THRESHOLD = 3;
-    private final int WIN_GAME_THRESHOLD = 5;
+    private final int LVL_UP_THRESHOLD = 10;
+    private final int WIN_GAME_THRESHOLD = 30;
 
 
     public ShadowFlap() {
@@ -97,7 +97,7 @@ public class ShadowFlap extends AbstractGame {
         } else {
             LVL1_BACKGROUND.draw(Window.getWidth()/2.0, Window.getHeight()/2.0);
         }
-        
+
         if (input.wasPressed(Keys.ESCAPE)) {
             Window.close();
         }
@@ -156,6 +156,7 @@ public class ShadowFlap extends AbstractGame {
             renderScore();
             weaponArray.removeAll(removeWeaponList);
             pipeArray.removeAll(removePipeList);
+
         }
 
 
@@ -227,7 +228,7 @@ public class ShadowFlap extends AbstractGame {
             pipe.pass();
         }
 
-        // detect level up
+        // detect level up or win
         if (score == LVL_UP_THRESHOLD && !levelUp) {
             levelUp = true;
             frameCount = 0;
@@ -261,10 +262,13 @@ public class ShadowFlap extends AbstractGame {
     }
 
     public void spawnRandomWeapon(){
+        // randomise spawn
         if (rand.nextInt(2) == 0){
+            // spawn a bomb
             weaponArray.add(new Bomb(rand.nextInt(
                     LVL_1_GAP_START[1] - LVL_1_GAP_START[0]) + LVL_1_GAP_START[0]));
         } else {
+            // spawn a rock
             weaponArray.add(new Rock(rand.nextInt(
                     LVL_1_GAP_START[1] - LVL_1_GAP_START[0]) + LVL_1_GAP_START[0]));
         }
@@ -327,10 +331,12 @@ public class ShadowFlap extends AbstractGame {
         for (Weapon weapon: weaponArray){
             Rectangle weaponBox = weapon.getBoundingBox();
             weapon.update(input);
-            if (birdWeaponCollision(weaponBox, birdBox)){
+            // detect bird picking up weapon
+            if (birdWeaponCollision(weaponBox, birdBox) && !bird.hasWeapon()){
                 bird.pickupWeapon(weapon);
             }
             detectWeaponPipeCollision();
+            // remove weapon after range
             if (weapon.isExpired()){
                 removeWeaponList.add(weapon);
             }
