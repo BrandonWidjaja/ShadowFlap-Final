@@ -4,13 +4,10 @@ import bagel.Window;
 import bagel.util.Point;
 import bagel.util.Rectangle;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class PipeSet {
     private Image PIPE_IMAGE = new Image("res/level/plasticPipe.png");
     private final int PIPE_GAP = 168;
-    private final int DEFAULT_PIPE_SPEED = 2;
+    private final int DEFAULT_PIPE_SPEED = 2; // modified for devices framerate
     private double currSpeed = DEFAULT_PIPE_SPEED;
     private final DrawOptions ROTATOR = new DrawOptions().setRotation(Math.PI);
     private int gapStart;

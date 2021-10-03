@@ -1,8 +1,6 @@
 import bagel.Image;
 import bagel.Input;
 
-import java.util.ArrayList;
-
 public class Life_bar {
     private final Image full = new Image("res/level/fullLife.png");
     private final Image used = new Image("res/level/noLife.png");

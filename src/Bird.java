@@ -1,4 +1,3 @@
-import bagel.DrawOptions;
 import bagel.Image;
 import bagel.Input;
 import bagel.Keys;
@@ -19,6 +18,7 @@ public class Bird {
     private double y;
     private double yVelocity;
     private Rectangle boundingBox;
+    private Weapon weapon;
 
     public Bird() {
         y = INITIAL_Y;
@@ -45,6 +45,10 @@ public class Bird {
         }
         y += yVelocity;
 
+        if (input.wasPressed(Keys.S)){
+            this.useWeapon();
+        }
+
         return boundingBox;
     }
 
@@ -62,5 +66,22 @@ public class Bird {
 
     public Rectangle getBox() {
         return boundingBox;
+    }
+
+    public void pickupWeapon(Weapon weapon){
+        this.weapon = weapon;
+        if (!this.weapon.isUsed()) {
+
+            this.weapon.pickUp();
+            this.weapon.setxPos(this.getBox().right());
+            this.weapon.setyPos(this.y);
+        }
+    }
+
+    public void useWeapon(){
+        if (this.weapon != null){
+            this.weapon.use();
+            this.weapon = null;
+        }
     }
 }

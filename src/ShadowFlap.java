@@ -7,6 +7,7 @@ import org.w3c.dom.css.Rect;
 import java.nio.channels.Pipe;
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.concurrent.RecursiveAction;
 
 /**
  * Skeleton Code for SWEN20003 Project 2, Semester 2, 2021
@@ -38,8 +39,12 @@ public class ShadowFlap extends AbstractGame {
     private Life_bar lives;
     private final ArrayList<PipeSet> pipeArray = new ArrayList<PipeSet>();
     private final ArrayList<PipeSet> removePipeList = new ArrayList<>();
+    private final ArrayList<Weapon> weaponArray = new ArrayList<>();
+    private final ArrayList<Weapon> removeWeaponArray = new ArrayList<>();
     private final int DEFAULT_PIPE_RATE = 250; // Changed to suit devices frame rate
     private double currPipeRate = DEFAULT_PIPE_RATE;
+    private final int DEFAULT_WEAPON_RATE = 200;
+    private double currWeaponRate = DEFAULT_WEAPON_RATE;
     private int frameCount = 0;
     private final Random rand = new Random();
     private boolean levelUp = false;
@@ -80,6 +85,7 @@ public class ShadowFlap extends AbstractGame {
     @Override
     public void update(Input input) {
         frameCount++;
+
 
         if (!levelUp || frameCount < levelUpDuration){
             LVL0_BACKGROUND.draw(Window.getWidth()/2.0, Window.getHeight()/2.0);
@@ -130,6 +136,10 @@ public class ShadowFlap extends AbstractGame {
                 spawnRandomPipe();
             }
 
+            if (frameCount % currWeaponRate == 0){
+                spawnRandomWeapon();
+            }
+
             bird.update(input);
             Rectangle birdBox = bird.getBox();
 
@@ -137,7 +147,14 @@ public class ShadowFlap extends AbstractGame {
 
             lives.update(input);
 
+
+
+            if (levelUp && frameCount % 300 == 0){
+
+            }
+            updateWeapons(birdBox, input);
             renderScore();
+            weaponArray.removeAll(removeWeaponArray);
             pipeArray.removeAll(removePipeList);
         }
 
@@ -227,14 +244,20 @@ public class ShadowFlap extends AbstractGame {
         }
     }
 
+    public void spawnRandomWeapon(){
+        weaponArray.add(new Bomb(300));
+    }
+
     public void updateTimeScale(Input input){
+        // increase timescale
         if (input.wasPressed(Keys.L) && currTimeScale < MAXTIMESCALE){
             currTimeScale++;
         }
-
+        // decrease timescale
         if (input.wasPressed(Keys.K) && currTimeScale >= MINTIMESCALE){
             currTimeScale--;
         }
+        // update pipe speed
         for (PipeSet pipe: pipeArray){
             if (pipe.getCurrSpeed() != pipe.getDefaultSpeed() * Math.pow(TIMERATIO, currTimeScale)){
                 pipe.setSpeed(pipe.getDefaultSpeed() * Math.pow(TIMERATIO, currTimeScale));
@@ -242,28 +265,32 @@ public class ShadowFlap extends AbstractGame {
         }
     }
 
-    public void updatePipes(Rectangle birdBox){
-        for (PipeSet pipe: pipeArray){
-            pipe.update();
+    public void detectPipeCollisions(PipeSet pipe, Rectangle birdBox){
 
-            // bird and pipe collision detection
-            Rectangle topPipeBox = pipe.getTopBox();
-            Rectangle bottomPipeBox = pipe.getBottomBox();
+        Rectangle topPipeBox = pipe.getTopBox();
+        Rectangle bottomPipeBox = pipe.getBottomBox();
+        // bird and flame collision detection
+        if (pipe instanceof  SteelPipe){
+            Rectangle topFlameBox = ((SteelPipe) pipe).getTopFlameBox();
+            Rectangle botFlameBox = ((SteelPipe) pipe).getBotFlameBox();
 
-            if (pipe instanceof  SteelPipe){
-                Rectangle topFlameBox = ((SteelPipe) pipe).getTopFlameBox();
-                Rectangle botFlameBox = ((SteelPipe) pipe).getBotFlameBox();
-
-                if (birdFlameCollision(birdBox, topFlameBox, botFlameBox) && ((SteelPipe) pipe).isFlameOn()){
-                    lives.removeLife();
-                    removePipeList.add(pipe);
-                }
-            }
-
-            if (birdPipeCollision(birdBox, topPipeBox, bottomPipeBox)){
+            if (birdFlameCollision(birdBox, topFlameBox, botFlameBox) && ((SteelPipe) pipe).isFlameOn()){
                 lives.removeLife();
                 removePipeList.add(pipe);
             }
+        }
+        // bird and pipe collision detection
+        if (birdPipeCollision(birdBox, topPipeBox, bottomPipeBox)){
+            lives.removeLife();
+            removePipeList.add(pipe);
+        }
+
+    }
+
+    public void updatePipes(Rectangle birdBox){
+        for (PipeSet pipe: pipeArray){
+            pipe.update();
+            detectPipeCollisions(pipe, birdBox);
 
             // remove pipes which go off screen
             if (pipe.getTopBox().right() < 0){
@@ -271,6 +298,25 @@ public class ShadowFlap extends AbstractGame {
             }
             updateScore(pipe);
         }
+    }
+
+    public void updateWeapons(Rectangle birdBox, Input input){
+        for (Weapon weapon: weaponArray){
+            Rectangle weaponBox = weapon.getBoundingBox();
+            weapon.update(input);
+            if (birdWeaponCollision(weaponBox, birdBox)){
+                bird.pickupWeapon(weapon);
+            }
+            if (weapon.isExpired()){
+                removeWeaponArray.add(weapon);
+
+            }
+        }
+
+    }
+
+    public boolean birdWeaponCollision(Rectangle weaponBox, Rectangle birdBox){
+        return weaponBox.intersects(birdBox);
     }
 
 
