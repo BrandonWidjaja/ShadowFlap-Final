@@ -60,7 +60,8 @@ public class ShadowFlap extends AbstractGame {
     private int currTimeScale = 0;
     private final int MAXTIMESCALE = 5;
     private final int MINTIMESCALE = 1;
-    private final int LVL_UP_THRESHOLD = 10;
+    private final int LVL_UP_THRESHOLD = 3;
+    private final int WIN_GAME_THRESHOLD = 5;
 
 
     public ShadowFlap() {
@@ -96,7 +97,7 @@ public class ShadowFlap extends AbstractGame {
         } else {
             LVL1_BACKGROUND.draw(Window.getWidth()/2.0, Window.getHeight()/2.0);
         }
-
+        
         if (input.wasPressed(Keys.ESCAPE)) {
             Window.close();
         }
@@ -105,7 +106,7 @@ public class ShadowFlap extends AbstractGame {
         if (!gameOn && lives.getLives() > 0) {
             if (!levelUp){
                 renderInstructionScreen(input);
-            } else if (frameCount >= levelUpDuration){
+            } else if (frameCount >= levelUpDuration && score < WIN_GAME_THRESHOLD){
                 renderInstructionScreen(input);
             }
         }
@@ -167,10 +168,10 @@ public class ShadowFlap extends AbstractGame {
     public void renderInstructionScreen(Input input) {
         // paint the instruction on screen
         FONT.drawString(INSTRUCTION_MSG, (Window.getWidth()/2.0-(FONT.getWidth(INSTRUCTION_MSG)/2.0)),
-                (Window.getHeight()/2.0-(FONT_SIZE/2.0)));
+                (Window.getHeight()/2.0+(FONT_SIZE/2.0)));
         if (levelUp){
             FONT.drawString(SHOOT_MSG, (Window.getWidth()/2.0-(FONT.getWidth(SHOOT_MSG)/2.0)),
-                    (Window.getHeight()/2.0-(FONT_SIZE/2.0) + SHOOT_MSG_OFFSET));
+                    (Window.getHeight()/2.0+(FONT_SIZE/2.0) + SHOOT_MSG_OFFSET));
         }
         if (input.wasPressed(Keys.SPACE)) {
             gameOn = true;
@@ -179,20 +180,21 @@ public class ShadowFlap extends AbstractGame {
 
     public void renderGameOverScreen() {
         FONT.drawString(GAME_OVER_MSG, (Window.getWidth()/2.0-(FONT.getWidth(GAME_OVER_MSG)/2.0)),
-                (Window.getHeight()/2.0-(FONT_SIZE/2.0)));
+                (Window.getHeight()/2.0+(FONT_SIZE/2.0)));
         String finalScoreMsg = FINAL_SCORE_MSG + score;
         FONT.drawString(finalScoreMsg, (Window.getWidth()/2.0-(FONT.getWidth(finalScoreMsg)/2.0)),
-                (Window.getHeight()/2.0-(FONT_SIZE/2.0))+SCORE_MSG_OFFSET);
+                (Window.getHeight()/2.0+(FONT_SIZE/2.0))+SCORE_MSG_OFFSET);
     }
 
     public void renderWinScreen() {
         FONT.drawString(CONGRATS_MSG, (Window.getWidth()/2.0-(FONT.getWidth(CONGRATS_MSG)/2.0)),
-                (Window.getHeight()/2.0-(FONT_SIZE/2.0)));
+                (Window.getHeight()/2.0+(FONT_SIZE/2.0)));
         String finalScoreMsg = FINAL_SCORE_MSG + score;
+        if (!levelUp){
         FONT.drawString(finalScoreMsg, (Window.getWidth()/2.0-(FONT.getWidth(finalScoreMsg)/2.0)),
-                (Window.getHeight()/2.0-(FONT_SIZE/2.0))+SCORE_MSG_OFFSET);
+                (Window.getHeight()/2.0+(FONT_SIZE/2.0))+SCORE_MSG_OFFSET);
+        }
     }
-
     public boolean birdFlameCollision(Rectangle birdBox, Rectangle topFlameBox, Rectangle botFlameBox){
         return birdBox.intersects(topFlameBox) || birdBox.intersects(botFlameBox);
     }
@@ -210,7 +212,7 @@ public class ShadowFlap extends AbstractGame {
 
     public void renderLvlUp(){
         FONT.drawString(LVLUP_MSG, (Window.getWidth()/2.0-(FONT.getWidth(LVLUP_MSG)/2.0)),
-                (Window.getHeight()/2.0-(FONT_SIZE/2.0)));
+                (Window.getHeight()/2.0+(FONT_SIZE/2.0)));
     }
 
     public void renderScore(){
@@ -226,7 +228,7 @@ public class ShadowFlap extends AbstractGame {
         }
 
         // detect level up
-        if (score == LVL_UP_THRESHOLD) {
+        if (score == LVL_UP_THRESHOLD && !levelUp) {
             levelUp = true;
             frameCount = 0;
             lives = new Life_bar(LVL_1_LIVES);
@@ -235,6 +237,9 @@ public class ShadowFlap extends AbstractGame {
             score = 0;
             bird.resetY();
 
+        } else if (score == WIN_GAME_THRESHOLD && levelUp){
+            gameOn = false;
+            win = true;
         }
     }
 
@@ -346,6 +351,7 @@ public class ShadowFlap extends AbstractGame {
                         score++;
                     }
                     removeWeaponList.add(weapon);
+
                 }
             }
         }
