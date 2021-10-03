@@ -6,8 +6,12 @@ import bagel.util.Rectangle;
 import java.lang.Math;
 
 public class Bird {
-    private final Image WING_DOWN_IMAGE = new Image("res/level-0/birdWingDown.png");
-    private final Image WING_UP_IMAGE = new Image("res/level-0/birdWingUp.png");
+    private final Image LVL0_WING_DOWN_IMAGE = new Image("res/level-0/birdWingDown.png");
+    private final Image LVL0_WING_UP_IMAGE = new Image("res/level-0/birdWingUp.png");
+    private final Image LVL1_WING_DOWN_IMAGE = new Image("res/level-1/birdWingDown.png");
+    private final Image LVL1_WING_UP_IMAGE = new Image("res/level-1/birdWingUp.png");
+    private Image currBirdImgUp = LVL0_WING_UP_IMAGE;
+    private Image currBirdImgDown = LVL0_WING_DOWN_IMAGE;
     private final double X = 200;
     private final double FLY_SIZE = 4;
     private final double FALL_SIZE = 0.1;
@@ -19,28 +23,29 @@ public class Bird {
     private double yVelocity;
     private Rectangle boundingBox;
     private Weapon weapon;
+    private boolean leveledUp = false;
 
     public Bird() {
         y = INITIAL_Y;
         yVelocity = 0;
-        boundingBox = WING_DOWN_IMAGE.getBoundingBoxAt(new Point(X, y));
+        boundingBox = currBirdImgDown.getBoundingBoxAt(new Point(X, y));
     }
 
     public Rectangle update(Input input) {
         frameCount ++;
         if (input.wasPressed(Keys.SPACE)) {
             yVelocity = -FLY_SIZE;
-            WING_DOWN_IMAGE.draw(X, y);
+            currBirdImgDown.draw(X, y);
         }
         else {
             yVelocity = Math.min(yVelocity + FALL_SIZE, Y_TERMINAL_VELOCITY);
             if (frameCount % SWITCH_FRAME == 0) {
-                WING_UP_IMAGE.draw(X, y);
-                boundingBox = WING_UP_IMAGE.getBoundingBoxAt(new Point(X, y));
+                currBirdImgUp.draw(X, y);
+                boundingBox = currBirdImgUp.getBoundingBoxAt(new Point(X, y));
             }
             else {
-                WING_DOWN_IMAGE.draw(X, y);
-                boundingBox = WING_DOWN_IMAGE.getBoundingBoxAt(new Point(X, y));
+                currBirdImgDown.draw(X, y);
+                boundingBox = currBirdImgDown.getBoundingBoxAt(new Point(X, y));
             }
         }
         y += yVelocity;
@@ -84,11 +89,7 @@ public class Bird {
     }
 
     public boolean hasWeapon(){
-        if (weapon == null){
-            return false;
-        } else {
-            return true;
-        }
+        return weapon != null;
     }
 
     public void useWeapon(){
@@ -96,5 +97,11 @@ public class Bird {
             this.weapon.use();
             this.weapon = null;
         }
+    }
+
+    public void levelUpBird(){
+        this.leveledUp = true;
+        this.currBirdImgDown = LVL1_WING_DOWN_IMAGE;
+        this.currBirdImgUp = LVL1_WING_UP_IMAGE;
     }
 }

@@ -237,6 +237,7 @@ public class ShadowFlap extends AbstractGame {
             win = false;
             score = 0;
             bird.resetY();
+            bird.levelUpBird();
 
         } else if (score == WIN_GAME_THRESHOLD && levelUp){
             gameOn = false;
