@@ -10,8 +10,20 @@ public abstract class Weapon {
     private final double THROWN_SPEED = 5;
     private boolean isUsed = false;
     private boolean isPickedUp = false;
+    private int frameCount = 0;
 
-    public abstract void update(Input input);
+    public void update(Input input){
+        if (!this.isPickedUp() || !this.isUsed()) {
+            this.setxPos(this.getxPos() - this.getCurrSpeed());
+        }
+
+        if (this.isUsed()){
+            frameCount++;
+            this.fireWeapon();
+        }
+
+        renderWeapon(this.getxPos(), this.getyPos());
+    }
 
     public abstract boolean isExpired();
 
@@ -59,7 +71,13 @@ public abstract class Weapon {
         return this.isUsed;
     }
 
-    public abstract void fireWeapon();
+    public int getFrameCount(){
+        return this.frameCount;
+    }
+
+    public void fireWeapon() {
+        this.setxPos(this.getxPos() + this.getThrownSpeed());
+    }
 
     public abstract Rectangle getBoundingBox();
 

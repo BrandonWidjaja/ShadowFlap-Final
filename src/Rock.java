@@ -1,13 +1,12 @@
 import bagel.Image;
-import bagel.Input;
 import bagel.util.Point;
 import bagel.util.Rectangle;
 
-public class Bomb extends Weapon{
-    private final int RANGE = 50;
-    private final Image BOMB_IMG = new Image("res/level-1/bomb.png");
+public class Rock extends Weapon{
+    private final int RANGE = 25;
+    private final Image BOMB_IMG = new Image("res/level-1/rock.png");
 
-    public Bomb(double yPos){
+    public Rock(double yPos){
         this.setyPos(yPos);
     }
 
