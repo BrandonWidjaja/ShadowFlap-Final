@@ -7,7 +7,7 @@ public class Life_bar {
     private final int INITIAL_X = 100;
     private final int X_GAP = 15;
     private int currLives;
-    private int max;
+    private final int max;
     private int currX;
 
 

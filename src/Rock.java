@@ -4,7 +4,7 @@ import bagel.util.Rectangle;
 
 public class Rock extends Weapon{
     private final int RANGE = 25;
-    private final Image BOMB_IMG = new Image("res/level-1/rock.png");
+    private final Image ROCK_IMG = new Image("res/level-1/rock.png");
 
     public Rock(double yPos){
         this.setyPos(yPos);
@@ -12,12 +12,12 @@ public class Rock extends Weapon{
 
     @Override
     public Rectangle getBoundingBox() {
-        return BOMB_IMG.getBoundingBoxAt(new Point(this.getxPos(), this.getyPos()));
+        return ROCK_IMG.getBoundingBoxAt(new Point(this.getxPos(), this.getyPos()));
     }
 
     @Override
     public void renderWeapon(double xPos, double yPos) {
-        BOMB_IMG.draw(xPos, yPos);
+        ROCK_IMG.draw(xPos, yPos);
     }
 
     public boolean isExpired(){

@@ -39,6 +39,10 @@ public abstract class Weapon {
         this.xPos = xPos;
     }
 
+    public int getDefaultSpeed(){
+        return this.DEFAULT_SPEED;
+    }
+
     public double getCurrSpeed() {
         return currSpeed;
     }
