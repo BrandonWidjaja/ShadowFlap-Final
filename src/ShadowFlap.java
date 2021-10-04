@@ -155,11 +155,11 @@ public class ShadowFlap extends AbstractGame {
             Rectangle birdBox = BIRD.getBox();
 
             updatePipes(birdBox);
+            updateWeapons(birdBox, input);
 
+            renderScore();
             lives.update(input);
 
-            updateWeapons(birdBox, input);
-            renderScore();
             WEAPON_ARRAY.removeAll(REMOVE_WEAPON_ARRAY);
             PIPE_ARRAY.removeAll(REMOVE_PIPE_ARRAY);
         }

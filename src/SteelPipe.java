@@ -11,6 +11,7 @@ public class SteelPipe extends PipeSet{
     private boolean flameOn = false;
     private int frameCount = 0;
     private final DrawOptions FLAME_ROTATE = new DrawOptions().setRotation(Math.PI);
+    private final int FLAME_OFFSET = 10;
 
     public SteelPipe(int gapStart){
         super(gapStart);
@@ -32,19 +33,19 @@ public class SteelPipe extends PipeSet{
         // render flames and set flameOn accordingly
         if (frameCount <= FLAME_DUR){
             flameOn = true;
-            FLAME_IMG.draw(this.getX(), this.getTopBox().bottom() + FLAME_IMG.getHeight()/2.0);
-            FLAME_IMG.draw(this.getX(), this.getBottomBox().top() - FLAME_IMG.getHeight()/2.0, FLAME_ROTATE);
+            FLAME_IMG.draw(this.getX(), this.getTopBox().bottom() + FLAME_IMG.getHeight()/2.0 - FLAME_OFFSET);
+            FLAME_IMG.draw(this.getX(), this.getBottomBox().top() - FLAME_IMG.getHeight()/2.0 + FLAME_OFFSET, FLAME_ROTATE);
         } else {
             flameOn = false;
         }
     }
 
     public Rectangle getTopFlameBox(){
-        return FLAME_IMG.getBoundingBoxAt(new Point(this.getX(), this.getTopBox().bottom() + FLAME_IMG.getHeight()/2.0));
+        return FLAME_IMG.getBoundingBoxAt(new Point(this.getX(), this.getTopBox().bottom() + FLAME_IMG.getHeight()/2.0 - FLAME_OFFSET));
     }
 
     public Rectangle getBotFlameBox(){
-        return FLAME_IMG.getBoundingBoxAt(new Point(this.getX(), this.getBottomBox().top() - FLAME_IMG.getHeight()/2.0));
+        return FLAME_IMG.getBoundingBoxAt(new Point(this.getX(), this.getBottomBox().top() - FLAME_IMG.getHeight()/2.0 + FLAME_OFFSET));
     }
 
     public boolean isFlameOn(){
