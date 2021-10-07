@@ -13,10 +13,10 @@ public class Bird {
     private Image currBirdImgUp = LVL0_WING_UP_IMAGE;
     private Image currBirdImgDown = LVL0_WING_DOWN_IMAGE;
     private final double X = 200;
-    private final double FLY_SIZE = 4;
-    private final double FALL_SIZE = 0.1;
+    private final double FLY_SIZE = 4; // changed to suit devices framerate
+    private final double FALL_SIZE = 0.1; // changed to suit devices framerate
     private final double INITIAL_Y = 350;
-    private final double Y_TERMINAL_VELOCITY = 6;
+    private final double Y_TERMINAL_VELOCITY = 6; // changed to suit devices framerate
     private final double SWITCH_FRAME = 10;
     private int frameCount = 0;
     private double y;

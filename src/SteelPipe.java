@@ -6,8 +6,8 @@ import bagel.util.Rectangle;
 public class SteelPipe extends PipeSet{
     private final Image STEEL_IMG = new Image("res/level-1/steelPipe.png");
     private final Image FLAME_IMG = new Image("res/level-1/flame.png");
-    private final int FLAME_FREQ = 200; // adjusted for devices framerate
-    private final int FLAME_DUR = 30; // adjusted for devices framerate
+    private final int FLAME_DUR = 150; // adjusted for devices framerate
+    private final int FLAME_FREQ = FLAME_DUR + 100; // changed to suit devices framerate
     private boolean flameOn = false;
     private int frameCount = 0;
     private final DrawOptions FLAME_ROTATE = new DrawOptions().setRotation(Math.PI);

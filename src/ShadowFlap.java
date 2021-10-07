@@ -49,15 +49,17 @@ public class ShadowFlap extends AbstractGame {
     private boolean levelUp = false;
 
     private final int DEFAULT_PIPE_RATE = 250; // changed to suit devices framerate
-    private final int DEFAULT_WEAPON_DELAY = 125; // changed to suit devices framerate
-    private final int DEFAULT_WEAPON_RATE = 750; // changed to suit devices framerate
+    private final double DEFAULT_WEAPON_DELAY = DEFAULT_PIPE_RATE / 2.0; /* changed to suit devices framerate
+                                                             (ratio used for easier change of values between devices) */
+    private final int DEFAULT_WEAPON_RATE = DEFAULT_PIPE_RATE * 3; /* changed to suit devices framerate
+                                                             (ratio used for easier change of values between devices) */
     private double currPipeRate = DEFAULT_PIPE_RATE;
     private double currWeaponRate = DEFAULT_WEAPON_RATE;
 
     private int weaponFrameCount = 0;
     private int frameCount = 0;
 
-    private final int LVL_UP_DURATION = 200; // changed to suit devices framerate
+    private final int LVL_UP_DURATION = 150; // changed to suit devices framerate
     private final int[] LVL_0_GAP_START = new int[]{100, 300, 500};
     private final int[] LVL_1_GAP_START = new int[]{100, 500};
 
