@@ -1,6 +1,10 @@
 import bagel.Image;
 import bagel.Input;
 
+/**
+ * Code for Life_Bar class
+ * @author Brandon
+ */
 public class Life_bar {
     private final Image full = new Image("res/level/fullLife.png");
     private final Image used = new Image("res/level/noLife.png");
@@ -10,12 +14,19 @@ public class Life_bar {
     private final int max;
     private int currX;
 
-
+    /**
+     * constructor for Life_Bar
+     * @param max input max lives
+     */
     public Life_bar(int max) {
         this.max = max;
         this.currLives = max;
     }
 
+    /**
+     * update method
+     * @param input input parameter
+     */
     public void update(Input input){
 
         currX = INITIAL_X;
@@ -32,10 +43,17 @@ public class Life_bar {
 
     }
 
+    /**
+     * remove a life
+     */
     public void removeLife(){
         this.currLives--;
     }
 
+    /**
+     * get current number of lives
+     * @return int
+     */
     public int getLives(){
         return this.currLives;
     }
