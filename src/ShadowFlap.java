@@ -137,7 +137,7 @@ public class ShadowFlap extends AbstractGame {
         // out of bound detection
         if (birdOutOfBound()) {
             lives.removeLife();
-            BIRD.resetY();
+            BIRD.reset();
         }
 
         // check out of lives
@@ -300,7 +300,7 @@ public class ShadowFlap extends AbstractGame {
             gameOn = false;
             win = false;
             score = 0;
-            BIRD.resetY();
+            BIRD.reset();
             BIRD.levelUpBird();
             currPipeRate = DEFAULT_PIPE_RATE;
             currWeaponRate = DEFAULT_WEAPON_RATE;

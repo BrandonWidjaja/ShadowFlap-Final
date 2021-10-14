@@ -98,10 +98,11 @@ public class Bird {
     }
 
     /**
-     * reset the y coord to initial value
+     * reset the bird to initial values
      */
-    public void resetY(){
+    public void reset(){
         this.y = INITIAL_Y;
+        this.yVelocity = 0;
     }
 
     /**
