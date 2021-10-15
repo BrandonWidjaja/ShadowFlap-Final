@@ -3,7 +3,7 @@ import bagel.Input;
 
 /**
  * Code for Life_Bar class
- * @author Brandon
+ * @author Brandon Widjaja
  */
 public class Life_bar {
     private final Image full = new Image("res/level/fullLife.png");

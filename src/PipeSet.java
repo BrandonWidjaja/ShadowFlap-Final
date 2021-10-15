@@ -6,7 +6,7 @@ import bagel.util.Rectangle;
 
 /**
  * Code for PipeSet class
- * @author Brandon
+ * @author Brandon Widjaja
  */
 public class PipeSet {
     private Image PIPE_IMAGE = new Image("res/level/plasticPipe.png");

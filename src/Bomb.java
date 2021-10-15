@@ -4,7 +4,7 @@ import bagel.util.Rectangle;
 
 /**
  * Code for Bomb class
- * @author Brandon
+ * @author Brandon Widjaja
  */
 public class Bomb extends Weapon{
     private final int RANGE = 50;

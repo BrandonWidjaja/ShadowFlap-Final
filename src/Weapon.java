@@ -4,7 +4,7 @@ import bagel.util.Rectangle;
 
 /**
  * Code for abstract weapon class
- * @author Brandon
+ * @author Brandon Widjaja
  */
 public abstract class Weapon {
     private double xPos = Window.getWidth();

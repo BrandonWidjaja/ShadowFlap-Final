@@ -4,7 +4,7 @@ import bagel.util.Rectangle;
 
 /**
  * Code for Rock class
- * @author Brandon
+ * @author Brandon Widjaja
  */
 public class Rock extends Weapon{
     private final int RANGE = 25;

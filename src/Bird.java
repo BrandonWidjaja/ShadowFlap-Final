@@ -7,7 +7,7 @@ import java.lang.Math;
 
 /**
  * Code for Bird class
- * @author Brandon
+ * @author Brandon Widjaja
  * some methods adapted from ShadowFlap-1 sample solution
  */
 public class Bird {

@@ -5,7 +5,7 @@ import bagel.util.Rectangle;
 
 /**
  * Code for SteelPipe class
- * @author Brandon
+ * @author Brandon Widjaja
  */
 public class SteelPipe extends PipeSet{
     private final Image STEEL_IMG = new Image("res/level-1/steelPipe.png");

@@ -1,6 +1,6 @@
 /**
  * Code for PlasticPipe class
- * @author Brandon
+ * @author Brandon Widjaja
  */
 public class PlasticPipe extends PipeSet{
     /**
