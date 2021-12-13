@@ -9,9 +9,13 @@ The ShadowFlap game uses BAGEL(The Basic Academic Game Engine Library). Document
 ## How to Play
 
 Press SPACE bar to start the game, and to fly up. Upon reaching the peak of the flight, gravity pulls you down to a preset terminal velocity. To win, pass through the pipes without touching them.
+
 Your score increases each time you pass a set of pipes. Upon reaching a score of 10, a level-up occurs. In level 2, pipes may spawn at completely random heights and steel flamethrower pipes may spawn.
+
 Weapons are also spawned: a rock, which may be used to destroy plastic pipes, and a bomb that may be used to destroy both plastic and steel pipes. Destroying a pipe grants a point.
+
 The game is won upon reaching a score of 30 in level 1.
+
 Time scale may also be adjusted by pressing 'l' (to increase) and 's' (to decrease). Timescale affects the speed at which pipes move across the screen and can be used to adjust the difficulty of the game.
 In each level, you are granted a certain number of lives. A life is lost upon exiting the playable area, and/or flying into a pipe or flames.
 
