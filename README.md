@@ -2,6 +2,10 @@
 
 ShadowFlap is an imitation of the classic Flappy Bird game, made as a university project.
 
+
+Designed and wrote Java code for a video game called Shadow Flap, a modified version of Flappy Bird. This project involved using object-oriented programming concepts to create a playable video game based off given specifications.
+
+
 ## Installation
 
 The ShadowFlap game uses BAGEL(The Basic Academic Game Engine Library). Documentation on the library [here](https://people.eng.unimelb.edu.au/mcmurtrye/bagel-doc/).
