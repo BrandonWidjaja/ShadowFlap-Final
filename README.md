@@ -7,7 +7,7 @@ Designed and wrote Java code for a video game called Shadow Flap, a modified ver
 
 Demo:
 
-https://user-images.githubusercontent.com/80396203/180389053-5f14f1a6-e67c-47cc-a83e-c65a2542b490.mp4
+https://user-images.githubusercontent.com/80396203/180389053-5f14f1a6-e67c-47cc-a83e-c65a2542b490.mp4  
 Footage is of stage one only (no weapons, or flame steel pipes yet).
 
 ## Installation
